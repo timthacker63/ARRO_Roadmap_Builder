@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARRO Internal Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700&family=Lexend+Deca:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --guardian: #042d49;
+      --green: #368604;
+      --yellow: #f7b020;
+      --horizon: #1075b4;
+      --panel: #f5f8fb;
+      --border: #c9d8e5;
+      --text: #153449;
+      --muted: #6a7f90;
+      --next-dot: #368604;
+      --next-dot-ring: rgba(54, 134, 4, 0.24);
+      --upcoming-dot: #f7b020;
+      --shipped-dot: #1075b4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Lexend Deca', sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f2f6fa 0%, #e8eff6 100%);
+    }
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .topbar {
+      background: var(--guardian);
+      color: #fff;
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 24px rgba(4, 45, 73, 0.2);
+    }
+    .topbar-right { text-align: right; }
+    .digest-label {
+      font: 700 12px 'Roboto Condensed', sans-serif;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #cbd8e3;
+    }
+    .last-updated { font-size: 12px; color: #e5edf4; }
+    .qtr-nav {
+      margin-top: 16px;
+      padding: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .qtr-tab {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--guardian);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font: 600 12px 'Roboto Condensed', sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .qtr-tab.active {
+      background: var(--guardian);
+      border-color: var(--guardian);
+      color: #fff;
+    }
+    .qtr-panel {
+      display: none;
+      margin-top: 14px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .qtr-panel.active { display: block; }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #d9e4ed;
+    }
+    .panel-title {
+      font: 700 24px 'Roboto Condensed', sans-serif;
+      color: var(--guardian);
+    }
+    .panel-subtitle { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .legend { display: flex; gap: 10px; flex-wrap: wrap; }
+    .legend-item { font-size: 12px; color: #445b6d; display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .rows { display: grid; gap: 12px; }
+    .release-row {
+      display: grid;
+      grid-template-columns: 170px 24px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    .date-col {
+      background: var(--panel);
+      border: 1px solid #dbe6ef;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .date-val { font: 700 18px 'Roboto Condensed', sans-serif; }
+    .rel-num { font-size: 12px; margin-top: 2px; font-weight: 600; }
+    .status-label {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .date-val.next, .rel-num.next { color: #2e6f03; }
+    .date-val.upcoming, .rel-num.upcoming { color: #7a5500; }
+    .date-val.shipped, .rel-num.shipped { color: #0c447c; }
+    .status-label.next { background: #edf6e5; color: #2e6f03; }
+    .status-label.upcoming { background: #fef3d9; color: #7a5500; }
+    .status-label.shipped { background: #e6f1fb; color: #0c447c; }
+    .tl-col { display: flex; flex-direction: column; align-items: center; height: 100%; }
+    .tl-dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 8px; }
+    .tl-dot.next { background: var(--next-dot); }
+    .tl-dot.upcoming { background: var(--upcoming-dot); }
+    .tl-dot.shipped { background: var(--shipped-dot); opacity: 0.8; }
+    .tl-line { width: 2px; flex: 1; margin-top: 4px; background: #c9d8e5; }
+    .tl-line.hidden { visibility: hidden; }
+    .feat-col { display: grid; gap: 10px; }
+    .feature {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--guardian);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      display: grid;
+      gap: 6px;
+    }
+    .feat-title { font-weight: 600; }
+    .multi-note { color: #5f7688; font-size: 12px; font-weight: 400; }
+    .feat-value { color: #3f5667; font-size: 14px; }
+    .feat-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid #d2e0eb;
+      background: #f0f5f9;
+      color: #1f465f;
+      text-transform: uppercase;
+    }
+    .tag-multi { background: #fff4db; border-color: #f7d58b; color: #7a5500; }
+    .kpi-col { margin-top: 4px; }
+    .kpi-container { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .kpi-column {
+      border: 1px dashed #bfd0dd;
+      background: #f7fbff;
+      border-radius: 6px;
+      padding: 6px;
+      text-align: center;
+    }
+    .kpi-period { font-size: 11px; color: #4c6374; }
+    .kpi-tbd { font-size: 12px; font-weight: 600; color: #28475d; }
+    .empty-state {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #f8fbff;
+      margin-bottom: 8px;
+    }
+    .empty-title { font-weight: 600; }
+    .empty-sub { font-size: 14px; color: #456073; margin-top: 4px; }
+    @media (max-width: 900px) {
+      .release-row { grid-template-columns: 1fr; }
+      .tl-col { display: none; }
+      .topbar-right { text-align: left; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="topbar">
+      <svg width="319" height="100" viewBox="0 0 319 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#logo-clip)">
+          <path d="M205.828 57.4609C211.337 54.2739 214.618 49.0186 214.618 43.4044C214.618 33.4846 205.681 26.2874 193.378 26.2874H170.204V74.0291H185.892V54.675L199.33 74.0291H217.688L205.575 57.5876L205.828 57.4398V57.4609ZM196.848 45.6416C196.848 48.7653 194.009 51.298 190.539 51.298H185.64V38.2756H190.539C194.03 38.2756 196.848 40.8083 196.848 43.932V45.6416Z" fill="#ffffff" />
+          <path d="M154.39 57.4609C159.9 54.2739 163.18 49.0186 163.18 43.4044C163.18 33.4846 154.243 26.2874 141.94 26.2874H118.766V74.0291H134.454V54.675L147.892 74.0291H166.25L154.138 57.5876L154.39 57.4398V57.4609ZM145.41 45.6416C145.41 48.7653 142.571 51.298 139.101 51.298H134.202V38.2756H139.101C142.592 38.2756 145.41 40.8083 145.41 43.932V45.6416Z" fill="#ffffff" />
+          <path d="M68.2325 74.0291L81.7123 54.9282L95.1922 74.0291H110.712V26.2874H83.6891L50 74.0291H68.2325ZM94.372 36.9882V51.298H84.2779L94.372 36.9882Z" fill="#ffffff" />
+          <path d="M247.487 25H240.526C228.666 25 219.013 34.6876 219.013 46.5914V53.4086C219.013 65.3124 228.666 75 240.526 75H247.487C259.348 75 269 65.3124 269 53.4086V46.5914C269 34.6876 259.348 25 247.487 25ZM252.597 51.699C252.597 56.1735 248.98 59.8248 244.501 59.8248H243.491C239.033 59.8248 235.395 56.1735 235.395 51.699V48.301C235.395 43.8265 239.033 40.1752 243.491 40.1752H244.501C248.959 40.1752 252.597 43.8265 252.597 48.301V51.699Z" fill="#ffffff" />
+          <path d="M70.4616 26.0131H52.6918V51.0236H52.8179L70.4616 26.0131Z" fill="#97C459" />
+        </g>
+        <defs><clipPath id="logo-clip"><rect width="219" height="50" fill="white" transform="translate(50 25)" /></clipPath></defs>
+      </svg>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:.04em;text-transform:uppercase;">Internal &middot; Full Detail</div>
+        <button onclick="window.print()" style="padding:5px 14px;font-size:11px;font-family:inherit;cursor:pointer;border:0.5px solid rgba(255,255,255,0.25);border-radius:6px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);font-weight:500;white-space:nowrap;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">&#8681; Print to PDF</button>
+        <div class="topbar-right">
+          <div class="digest-label">Release Digest</div>
+          <div class="last-updated">Last updated <span id="last-updated-date">06/20/26</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qtr-nav" role="tablist"><button class="qtr-tab active" role="tab" data-qtr="q2">Q2 2026</button><button class="qtr-tab" role="tab" data-qtr="q3">Q3 2026</button><button class="qtr-tab" role="tab" data-qtr="q4">Q4 2026</button><button class="qtr-tab" role="tab" data-qtr="q1">Q1 2027</button><button class="qtr-tab" role="tab" data-qtr="q2027">Q2 2027</button>
+    </div>
+
+    <div class="qtr-panel active" id="panel-q2" role="tabpanel">
+      <div class="panel-header">
+        <div><div class="panel-title">Q2 2026 &mdash; April through June</div></div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--next-dot);box-shadow:0 0 0 2px var(--next-dot-ring);"></span> Next</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--upcoming-dot);"></span> Upcoming</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--shipped-dot);opacity:.7;"></span> Shipped</div>
+        </div>
+      </div>
+      <div class="rows">
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val shipped">04/07/26</div>
+            <div class="rel-num shipped">25.1.1</div>
+            
+            <div class="status-label shipped">Shipped</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot shipped"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">Tax calculation engine</div>
+              <div class="feat-value">Pay runs clean the first time — no corrections, no rework after the fact.</div>
+              <div class="feat-meta"><span class="tag tag-payroll">Payroll</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /25.1.1 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val shipped">04/21/26</div>
+            <div class="rel-num shipped">26.1</div>
+            
+            <div class="status-label shipped">Shipped</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot shipped"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">Mission management & payroll clarity</div>
+              <div class="feat-value">Missions categorized, cloned in one click, tied to unique pay dates. Withholding visible in real time — fewer admin calls, fewer errors.</div>
+              <div class="feat-meta"><span class="tag tag-operations">Operations</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">Entra account provisioning</div>
+              <div class="feat-value">New hires get system access on day one automatically. IT tickets for access eliminated.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.1 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val shipped">05/05/26</div>
+            <div class="rel-num shipped">26.2</div>
+            <div class="rel-num shipped">04/20–05/01</div>
+            <div class="status-label shipped">Shipped</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot shipped"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">PerStat permission controls</div>
+              <div class="feat-value">Admins set access at the tab level across PerStat. The right people see the right data — no more, no less.</div>
+              <div class="feat-meta"><span class="tag tag-compliance">Compliance</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">8305 - Bulk roster imports — phase 1<span class="multi-note">&nbsp;&middot; planned 26.3 &rarr; 05/19/26</span></div>
+              <div class="feat-value">States load hundreds of records via CSV in minutes. Validation catches duplicates before they hit the system.</div>
+              <div class="feat-meta"><span class="tag tag-operations">Operations</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.2 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val shipped">05/19/26</div>
+            <div class="rel-num shipped">26.3</div>
+            <div class="rel-num shipped">05/04–05/16</div>
+            <div class="status-label shipped">Shipped</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot shipped"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">8170 - Multi-tenant GCC High deployment</div>
+              <div class="feat-value">ARRO fully operational in classified environments. States with high-side accreditation requirements are now supported.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">Incentive pay — phase 1<span class="multi-note">&nbsp;&middot; planned 26.4 &rarr; 06/02/26</span></div>
+              <div class="feat-value">Service members select eligible incentive pay types at their level. Foundation live; full automation completes next release.</div>
+              <div class="feat-meta"><span class="tag tag-payroll">Payroll</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">8305 - Bulk roster imports — complete<span class="multi-note">&nbsp;&middot; started 05/05/26</span></div>
+              <div class="feat-value">States load hundreds of records via CSV in minutes. Validation catches duplicates before they hit the system.</div>
+              <div class="feat-meta"><span class="tag tag-operations">Operations</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">9035 - ARRO Maintenance Page</div>
+              <div class="feat-value">Shows maintenance page when the system is undergoing maintenance.</div>
+              <div class="feat-meta"><span class="tag tag-operations">Operations</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">9048 - CS-managed system broadcast messaging</div>
+              <div class="feat-value">Allows customer support to send broadcast messages to all users during system maintenance or other important events.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.3 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val shipped">06/02/26</div>
+            <div class="rel-num shipped">26.4</div>
+            <div class="rel-num shipped">05/18–05/29</div>
+            <div class="status-label shipped">Shipped</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot shipped"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">Incentive pay — complete<span class="multi-note">&nbsp;&middot; started 05/19/26</span></div>
+              <div class="feat-value">Pay engine processes all incentive types automatically and accurately. Manual incentive pay entry fully eliminated.</div>
+              <div class="feat-meta"><span class="tag tag-payroll">Payroll</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.4 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val shipped">06/16/26</div>
+            <div class="rel-num shipped">26.5</div>
+            <div class="rel-num shipped">06/01–06/12</div>
+            <div class="status-label shipped">Shipped</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot shipped"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">PERSTAT Pay Locking - phase 1<span class="multi-note">&nbsp;&middot; planned 26.6 &rarr; 06/30/26</span></div>
+              <div class="feat-value">Payroll status locks after close. No unauthorized changes can reach a soldier's pay. Full audit trail on every override.</div>
+              <div class="feat-meta"><span class="tag tag-compliance">Compliance</span><span class="tag tag-operations">Operations</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">PAR Zero Pay Display</div>
+              <div class="feat-value">Display Service Members the ability to view zero pay situations.</div>
+              <div class="feat-meta"><span class="tag tag-payroll">Payroll</span><span class="tag tag-operations">Operations</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">Engineering Database Projects</div>
+              <div class="feat-value">Setup database projects for engineering team.</div>
+              <div class="feat-meta"><span class="tag tag-engineering">Engineering</span><span class="tag tag-compliance">Compliance</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.5 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val next">06/30/26</div>
+            <div class="rel-num next">26.6</div>
+            <div class="rel-num next">06/16–06/26</div>
+            <div class="status-label next">Next</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot next"></div>
+            <div class="tl-line hidden"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">PERSTAT Pay Locking - complete<span class="multi-note">&nbsp;&middot; started 06/16/26</span></div>
+              <div class="feat-value">Payroll status locks after close. No unauthorized changes can reach a soldier's pay. Full audit trail on every override.</div>
+              <div class="feat-meta"><span class="tag tag-compliance">Compliance</span><span class="tag tag-operations">Operations</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">Engineer Release - Technical Debt</div>
+              <div class="feat-value">Technical Debt</div>
+              <div class="feat-meta"><span class="tag tag-compliance">Compliance</span><span class="tag tag-technical">Technical</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.6 -->
+      </div>
+    </div>
+    <div class="qtr-panel" id="panel-q3" role="tabpanel">
+      <div class="panel-header">
+        <div><div class="panel-title">Q3 2026 &mdash; July through September</div></div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--next-dot);box-shadow:0 0 0 2px var(--next-dot-ring);"></span> Next</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--upcoming-dot);"></span> Upcoming</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--shipped-dot);opacity:.7;"></span> Shipped</div>
+        </div>
+      </div>
+      <div class="rows">
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val upcoming">07/14/26</div>
+            <div class="rel-num upcoming">26.7</div>
+            <div class="rel-num upcoming">06/29–07/10</div>
+            <div class="status-label upcoming">Upcoming</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot upcoming"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Sync Engine Phase 1<span class="multi-note">&nbsp;&middot; planned 26.8 &rarr; 07/28/26</span></div>
+              <div class="feat-value">Implementation of ARRO Connect - Sync Engine Phase 1 features.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Intra-State UX Phase 1<span class="multi-note">&nbsp;&middot; planned 26.8 &rarr; 07/28/26</span></div>
+              <div class="feat-value">Creates the UX experience for intra-state Profile Syncs.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">9163 - Enforce Authorization Attributes Across API Endpoints Phase 1<span class="multi-note">&nbsp;&middot; planned 26.7 &rarr; 07/14/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">HOLD: Patches<span class="multi-note">&nbsp;&middot; planned 26.7 &rarr; 07/14/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.7 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val upcoming">07/28/26</div>
+            <div class="rel-num upcoming">26.8</div>
+            <div class="rel-num upcoming">07/13–07/24</div>
+            <div class="status-label upcoming">Upcoming</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot upcoming"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Sync Engine Complete<span class="multi-note">&nbsp;&middot; started 07/14/26</span></div>
+              <div class="feat-value">Implementation of ARRO Connect - Sync Engine Complete features.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Intra-State UX Complete<span class="multi-note">&nbsp;&middot; started 07/14/26</span></div>
+              <div class="feat-value">Creates the UX experience for intra-state Profile Syncs.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">9163 - Enforce Authorization Attributes Across API Endpoints Phase 2<span class="multi-note">&nbsp;&middot; planned 26.9 &rarr; 08/11/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">HOLD: Patches<span class="multi-note">&nbsp;&middot; planned 26.8 &rarr; 07/28/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.8 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val upcoming">08/11/26</div>
+            <div class="rel-num upcoming">26.9</div>
+            <div class="rel-num upcoming">07/27–08/07</div>
+            <div class="status-label upcoming">Upcoming</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot upcoming"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Infrastructure & Operation Setup<span class="multi-note">&nbsp;&middot; planned 26.9 &rarr; 08/11/26</span></div>
+              <div class="feat-value">ARRO Connect Infrastructure and Operation Setup.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">9163 - Enforce Authorization Attributes Across API Endpoints Complete<span class="multi-note">&nbsp;&middot; started 07/28/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">8324 - Implement the Storing and Deploying of Database deployments to Satisfy FedRAMP Requirements Phase 1<span class="multi-note">&nbsp;&middot; planned 26.10 &rarr; 08/25/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">HOLD: Patches<span class="multi-note">&nbsp;&middot; planned 26.9 &rarr; 08/11/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.9 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val upcoming">08/25/26</div>
+            <div class="rel-num upcoming">26.10</div>
+            <div class="rel-num upcoming">08/10–08/21</div>
+            <div class="status-label upcoming">Upcoming</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot upcoming"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Unit Connection & Request Flow Phase 1<span class="multi-note">&nbsp;&middot; planned 26.11 &rarr; 09/08/26</span></div>
+              <div class="feat-value">Unit Sync and Request Flow.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">8324 - Implement the Storing and Deploying of Database deployments to Satisfy FedRAMP Requirements Phase 1<span class="multi-note">&nbsp;&middot; started 08/11/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">8790 - Harden ARRO User Account Binding and Lifecycle Control (AC-2 Compliance)</div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">HOLD: Patches<span class="multi-note">&nbsp;&middot; planned 26.10 &rarr; 08/25/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.10 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val upcoming">09/08/26</div>
+            <div class="rel-num upcoming">26.11</div>
+            <div class="rel-num upcoming">08/21–09/04</div>
+            <div class="status-label upcoming">Upcoming</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot upcoming"></div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Unit Connection & Request Flow Complete<span class="multi-note">&nbsp;&middot; started 08/25/26</span></div>
+              <div class="feat-value">Implementation of ARRO Connect - Unit Connection & Request Flow Complete features.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - PerStat Visibility & Sync<span class="multi-note">&nbsp;&middot; planned 26.11 &rarr; 09/08/26</span></div>
+              <div class="feat-value">PerStat Sync and Visibility.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">8790 - Harden ARRO User Account Binding and Lifecycle Control (AC-2 Compliance)</div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">HOLD: Patches<span class="multi-note">&nbsp;&middot; planned 26.11 &rarr; 09/08/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.11 -->
+        <div class="release-row">
+          <div class="date-col">
+            <div class="date-val upcoming">09/22/26</div>
+            <div class="rel-num upcoming">26.12</div>
+            <div class="rel-num upcoming">09/07–09/18</div>
+            <div class="status-label upcoming">Upcoming</div>
+          </div>
+          <div class="tl-col">
+            <div class="tl-dot upcoming"></div>
+            <div class="tl-line hidden"></div>
+          </div>
+          <div class="feat-col">
+            <div class="feature">
+              <div class="feat-title">ARRO Connect - Close Out Process<span class="multi-note">&nbsp;&middot; planned 26.12 &rarr; 09/22/26</span></div>
+              <div class="feat-value">Implementation of ARRO Connect - Close Out Process features.</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">ATO - Technical Debt</div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+            <div class="feature">
+              <div class="feat-title">HOLD: Patches<span class="multi-note">&nbsp;&middot; planned 26.12 &rarr; 09/22/26</span></div>
+              <div class="feat-value">TBD</div>
+              <div class="feat-meta"><span class="tag tag-platform">Platform</span><span class="tag tag-multi">multi-sprint</span></div>
+              <div class="kpi-col kpi-visible"><div class="kpi-container"><div class="kpi-column"><div class="kpi-period">30 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">60 Day</div><div class="kpi-tbd">TBD</div></div><div class="kpi-column"><div class="kpi-period">90 Day</div><div class="kpi-tbd">TBD</div></div></div></div>
+            </div>
+          </div>
+        </div><!-- /26.12 -->
+      </div>
+    </div>
+    <div class="qtr-panel" id="panel-q4" role="tabpanel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Q4 2026 &mdash; October through December</div>
+          <div class="panel-subtitle">Horizon planning — details to be confirmed</div>
+        </div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">Import Engine</div>
+        <div class="empty-sub">A new flexible data import capability replacing the legacy system. Configurable field mapping and validation handles complex data structures out of the box — reducing onboarding friction for new states and eliminating manual effort during client setup.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">ARRO Platform Integration</div>
+        <div class="empty-sub">Connecting core platform capabilities into unified workflows — two focused integrations this quarter.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">ARRO AI Natural Language Processing - Phase 1</div>
+        <div class="empty-sub">Leveraging AI to provide natural language understanding and processing capabilities, enabling more intuitive interactions.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">ATO / Compliance</div>
+        <div class="empty-sub">Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">Bugs & Patches</div>
+        <div class="empty-sub">Ongoing platform stability improvements and issue resolution across the sprint cycle.</div>
+      </div>
+    </div>
+    <div class="qtr-panel" id="panel-q1" role="tabpanel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Q1 2027 &mdash; January through March</div>
+          <div class="panel-subtitle">Horizon planning — details to be confirmed</div>
+        </div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">Consumable Inventory</div>
+        <div class="empty-sub">Track and manage non-serialized consumable items alongside the equipment module — bulk supplies, expendables, and stock items managed within the same ARRO inventory workflow.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">Equipment Request & Fulfillment</div>
+        <div class="empty-sub">End-to-end equipment lifecycle management. Requests for equipment are submitted, commanders approve, and fulfillment flows through ARRO inventory. Hand receipts generated on check-out; condition inspection recorded on return.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">ATO / Compliance</div>
+        <div class="empty-sub">Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">Bugs & Patches</div>
+        <div class="empty-sub">Ongoing platform stability improvements and issue resolution across the sprint cycle.</div>
+      </div>
+    </div>
+    <div class="qtr-panel" id="panel-q2027" role="tabpanel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Q2 2027 &mdash; April through June</div>
+          <div class="panel-subtitle">Horizon planning — details to be confirmed</div>
+        </div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">Credential Management</div>
+        <div class="empty-sub">Track ICS certifications, FEMA credentials, and other personnel qualifications directly in ARRO. Expiration dates, completion status, and qualification gaps visible at the roster level — so the right people are assigned to the right activations.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">ARRO AI Natural Language Processing - Phase 2</div>
+        <div class="empty-sub">Expanding AI capabilities to handle more complex queries and provide deeper insights, further enhancing user experience and operational efficiency.</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-title">Bugs & Patches</div>
+        <div class="empty-sub">Ongoing platform stability improvements and issue resolution across the sprint cycle.</div>
+      </div>
+    </div>
+  </div><!-- /page -->
+
+  <script>
+    var tabs = document.querySelectorAll('.qtr-tab');
+    var panels = document.querySelectorAll('.qtr-panel');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var target = this.getAttribute('data-qtr');
+        tabs.forEach(function (t) { t.classList.remove('active'); });
+        panels.forEach(function (p) { p.classList.remove('active'); });
+        this.classList.add('active');
+        document.getElementById('panel-' + target).classList.add('active');
+      });
+    });
+    document.body.classList.add('internal-view');
+  </script>
+</body>
+</html>

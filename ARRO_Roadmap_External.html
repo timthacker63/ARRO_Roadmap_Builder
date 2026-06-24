@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARRO Product Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700&family=Lexend+Deca:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --guardian: #042d49;
+      --green: #368604;
+      --yellow: #f7b020;
+      --horizon: #1075b4;
+      --border: #c9d8e5;
+      --bg: #edf2f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Lexend Deca', sans-serif;
+      color: #17374c;
+      background: var(--bg);
+    }
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px 18px 40px;
+    }
+    header {
+      background: var(--guardian);
+      color: #fff;
+      border-radius: 12px;
+      padding: 26px 22px;
+      margin-bottom: 16px;
+      border-bottom: 4px solid var(--green);
+      box-shadow: 0 8px 24px rgba(4, 45, 73, 0.2);
+    }
+    h1 {
+      margin: 0;
+      font: 700 36px 'Roboto Condensed', sans-serif;
+    }
+    .sub { color: #d7e5f0; margin-top: 6px; }
+    .qtr-section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .qtr-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #dde7ef;
+      margin-bottom: 10px;
+    }
+    .qtr-badge {
+      font: 700 11px 'Roboto Condensed', sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+    .qtr-badge.upcoming { background: #fef3d9; color: #7a5500; border: 1px solid #f4d487; }
+    .qtr-badge.horizon { background: #e6f1fb; color: #0c447c; border: 1px solid #b8d6ef; }
+    .qtr-label {
+      font: 700 20px 'Roboto Condensed', sans-serif;
+      color: var(--guardian);
+    }
+    .features { display: grid; gap: 10px; }
+    .feat-card {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--guardian);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+    }
+    .feat-card h4 {
+      margin: 0;
+      font: 700 20px 'Roboto Condensed', sans-serif;
+      color: #0d3553;
+    }
+    .feat-card p {
+      margin: 6px 0 0;
+      color: #3f596d;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .feat-tags { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid #d2e0eb;
+      background: #f0f5f9;
+      color: #1f465f;
+    }
+    footer {
+      margin-top: 14px;
+      color: #4b6273;
+      font-size: 12px;
+      text-align: center;
+    }
+    @media (max-width: 700px) {
+      h1 { font-size: 30px; }
+      .qtr-label { font-size: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <h1>ARRO Product Roadmap</h1>
+      <div class="sub">Planned capabilities across Q3 2026 through Q2 2027.</div>
+    </header>
+
+    <div class="qtr-section">
+      <div class="qtr-header">
+        <span class="qtr-badge upcoming">Q3 2026 &middot; Planned</span>
+        <span class="qtr-label">Q3 2026 &mdash; July through September</span>
+      </div>
+      <div class="features"><div class="feat-card"><h4>ARRO Connect</h4><p>Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span><span class="tag tag-operations">Operations</span></div></div><div class="feat-card"><h4>ATO / Compliance</h4><p>Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification.</p><div class="feat-tags"><span class="tag tag-compliance">Compliance</span><span class="tag tag-platform">Platform</span></div></div><div class="feat-card"><h4>Bugs & Patches</h4><p>Ongoing platform stability improvements and issue resolution across the sprint cycle.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span></div></div></div>
+    </div>
+    <div class="qtr-section">
+      <div class="qtr-header">
+        <span class="qtr-badge horizon">Q4 2026 &middot; Horizon</span>
+        <span class="qtr-label">Q4 2026 &mdash; October through December</span>
+      </div>
+      <div class="features"><div class="feat-card"><h4>Import Engine</h4><p>A new flexible data import capability replacing the legacy system. Configurable field mapping and validation handles complex data structures out of the box — reducing onboarding friction for new states and eliminating manual effort during client setup.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span></div></div><div class="feat-card"><h4>ARRO Platform Integration</h4><p>Connecting core platform capabilities into unified workflows — two focused integrations this quarter.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span><span class="tag tag-em">Emergency Management</span></div></div><div class="feat-card"><h4>ARRO AI Natural Language Processing - Phase 1</h4><p>Leveraging AI to provide natural language understanding and processing capabilities, enabling more intuitive interactions.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span></div></div><div class="feat-card"><h4>ATO / Compliance</h4><p>Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification.</p><div class="feat-tags"><span class="tag tag-compliance">Compliance</span><span class="tag tag-platform">Platform</span></div></div><div class="feat-card"><h4>Bugs & Patches</h4><p>Ongoing platform stability improvements and issue resolution across the sprint cycle.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span></div></div></div>
+    </div>
+    <div class="qtr-section">
+      <div class="qtr-header">
+        <span class="qtr-badge horizon">Q1 2027 &middot; Horizon</span>
+        <span class="qtr-label">Q1 2027 &mdash; January through March</span>
+      </div>
+      <div class="features"><div class="feat-card"><h4>Consumable Inventory</h4><p>Track and manage non-serialized consumable items alongside the equipment module — bulk supplies, expendables, and stock items managed within the same ARRO inventory workflow.</p><div class="feat-tags"><span class="tag tag-logistics">Logistics</span></div></div><div class="feat-card"><h4>Equipment Request & Fulfillment</h4><p>End-to-end equipment lifecycle management. Requests for equipment are submitted, commanders approve, and fulfillment flows through ARRO inventory. Hand receipts generated on check-out; condition inspection recorded on return.</p><div class="feat-tags"><span class="tag tag-logistics">Logistics</span></div></div><div class="feat-card"><h4>ATO / Compliance</h4><p>Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification.</p><div class="feat-tags"><span class="tag tag-compliance">Compliance</span><span class="tag tag-platform">Platform</span></div></div><div class="feat-card"><h4>Bugs & Patches</h4><p>Ongoing platform stability improvements and issue resolution across the sprint cycle.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span></div></div></div>
+    </div>
+    <div class="qtr-section">
+      <div class="qtr-header">
+        <span class="qtr-badge horizon">Q2 2027 &middot; Horizon</span>
+        <span class="qtr-label">Q2 2027 &mdash; April through June</span>
+      </div>
+      <div class="features"><div class="feat-card"><h4>Credential Management</h4><p>Track ICS certifications, FEMA credentials, and other personnel qualifications directly in ARRO. Expiration dates, completion status, and qualification gaps visible at the roster level — so the right people are assigned to the right activations.</p><div class="feat-tags"><span class="tag tag-em">Emergency Management</span></div></div><div class="feat-card"><h4>ARRO AI Natural Language Processing - Phase 2</h4><p>Expanding AI capabilities to handle more complex queries and provide deeper insights, further enhancing user experience and operational efficiency.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span></div></div><div class="feat-card"><h4>Bugs & Patches</h4><p>Ongoing platform stability improvements and issue resolution across the sprint cycle.</p><div class="feat-tags"><span class="tag tag-platform">Platform</span></div></div></div>
+    </div>
+    <footer>ARRO Product Roadmap &middot; Q3 2026 &ndash; Q2 2027 &middot; Planned features and timing are subject to change. This roadmap reflects current intent and is not a contractual commitment.</footer>
+  </div>
+</body>
+</html>

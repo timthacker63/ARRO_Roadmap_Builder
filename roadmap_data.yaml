@@ -1,0 +1,457 @@
+# ============================================================================
+# ARRO ROADMAP — SINGLE SOURCE OF TRUTH
+# Edit this file. Run generate_roadmap.py to produce both:
+#   - ARRO_roadmap.html (internal — full detail, all releases, KPIs)
+#   - ARRO_Roadmap_External.html (customer-facing — quarter cards, no KPIs)
+#
+# RULES THAT PREVENT DRIFT:
+#   - audience: internal_only | both
+#       "internal_only" features NEVER appear in the external output.
+#       "both" features appear in BOTH outputs and require external_title +
+#       external_summary — no external_summary means the generator skips it
+#       externally rather than silently reusing internal language.
+#   - external_title groups releases: every "both" feature sharing the same
+#     external_title within the same quarter collapses into ONE external
+#     card, regardless of how many internal releases/sprints it spans.
+#   - continues_to replaces hand-typed "planned 26.X -> date" strings. The
+#     generator computes that note. A release number with no matching date
+#     anywhere in this file is a build error, not a silent typo.
+#   - A feature CANNOT appear in the external output unless every quarter it
+#     touches has at least one matching internal release entry. This is what
+#     stops a forward promise (e.g. a "Phase 2") from existing externally
+#     with no internal backing.
+# ============================================================================
+
+releases:
+
+  # ───────────────────────── Q2 2026 — shipped ─────────────────────────
+  - release: "25.1.1"
+    ship_date: "2026-04-07"
+    status: shipped
+    quarter: "Q2 2026"
+    features:
+      - internal_title: "Tax calculation engine"
+        audience: both
+        external_title: "Tax calculation engine"
+        internal_summary: "Pay runs clean the first time — no corrections, no rework after the fact."
+        external_summary: "Pay runs clean the first time — no corrections, no rework after the fact."
+        tags: [payroll]
+
+  - release: "26.1"
+    ship_date: "2026-04-21"
+    status: shipped
+    quarter: "Q2 2026"
+    features:
+      - internal_title: "Mission management & payroll clarity"
+        audience: both
+        external_title: "Mission management & payroll clarity"
+        internal_summary: "Missions categorized, cloned in one click, tied to unique pay dates. Withholding visible in real time — fewer admin calls, fewer errors."
+        external_summary: "Missions categorized, cloned in one click, tied to unique pay dates. Withholding visible in real time — fewer admin calls, fewer errors."
+        tags: [operations]
+      - internal_title: "Entra account provisioning"
+        audience: internal_only
+        internal_summary: "New hires get system access on day one automatically. IT tickets for access eliminated."
+        tags: [platform]
+
+  - release: "26.2"
+    ship_date: "2026-05-05"
+    sprint_window: "04/20–05/01"
+    status: shipped
+    quarter: "Q2 2026"
+    features:
+      - internal_title: "PerStat permission controls"
+        audience: both
+        external_title: "PerStat permission controls"
+        internal_summary: "Admins set access at the tab level across PerStat. The right people see the right data — no more, no less."
+        external_summary: "Admins set access at the tab level across PerStat. The right people see the right data — no more, no less."
+        tags: [compliance]
+      - internal_title: "8305 - Bulk roster imports — phase 1"
+        audience: internal_only
+        internal_summary: "States load hundreds of records via CSV in minutes. Validation catches duplicates before they hit the system."
+        tags: [operations]
+        multi_sprint: true
+        continues_to: { release: "26.3", ship_date: "2026-05-19" }
+
+  - release: "26.3"
+    ship_date: "2026-05-19"
+    sprint_window: "05/04–05/16"
+    status: shipped
+    quarter: "Q2 2026"
+    features:
+      - internal_title: "8170 - Multi-tenant GCC High deployment"
+        audience: internal_only
+        internal_summary: "ARRO fully operational in classified environments. States with high-side accreditation requirements are now supported."
+        tags: [platform]
+      - internal_title: "Incentive pay — phase 1"
+        audience: both
+        external_title: "Incentive pay"
+        internal_summary: "Service members select eligible incentive pay types at their level. Foundation live; full automation completes next release."
+        external_summary: "Service members select eligible incentive pay types at their level."
+        tags: [payroll]
+        multi_sprint: true
+        continues_to: { release: "26.4", ship_date: "2026-06-02" }
+      - internal_title: "8305 - Bulk roster imports — complete"
+        audience: internal_only
+        internal_summary: "States load hundreds of records via CSV in minutes. Validation catches duplicates before they hit the system."
+        tags: [operations]
+        multi_sprint: true
+        started_in: { release: "26.2", ship_date: "2026-05-05" }
+      - internal_title: "9035 - ARRO Maintenance Page"
+        audience: internal_only
+        internal_summary: "Shows maintenance page when the system is undergoing maintenance."
+        tags: [operations]
+      - internal_title: "9048 - CS-managed system broadcast messaging"
+        audience: internal_only
+        internal_summary: "Allows customer support to send broadcast messages to all users during system maintenance or other important events."
+        tags: [platform]
+
+  - release: "26.4"
+    ship_date: "2026-06-02"
+    sprint_window: "05/18–05/29"
+    status: shipped
+    quarter: "Q2 2026"
+    features:
+      - internal_title: "Incentive pay — complete"
+        audience: both
+        external_title: "Incentive pay"
+        internal_summary: "Pay engine processes all incentive types automatically and accurately. Manual incentive pay entry fully eliminated."
+        external_summary: "Pay engine processes all incentive types automatically and accurately. Manual incentive pay entry fully eliminated."
+        tags: [payroll]
+        multi_sprint: true
+        started_in: { release: "26.3", ship_date: "2026-05-19" }
+
+  - release: "26.5"
+    ship_date: "2026-06-16"
+    sprint_window: "06/01–06/12"
+    status: shipped
+    quarter: "Q2 2026"
+    features:
+      - internal_title: "PERSTAT Pay Locking - phase 1"
+        audience: both
+        external_title: "PERSTAT Pay Locking"
+        internal_summary: "Payroll status locks after close. No unauthorized changes can reach a soldier's pay. Full audit trail on every override."
+        external_summary: "Payroll status locks after close. No unauthorized changes can reach a soldier's pay. Full audit trail on every override."
+        tags: [compliance, operations]
+        multi_sprint: true
+        continues_to: { release: "26.6", ship_date: "2026-06-30" }
+      - internal_title: "PAR Zero Pay Display"
+        audience: internal_only
+        internal_summary: "Display Service Members the ability to view zero pay situations."
+        tags: [payroll, operations]
+      - internal_title: "Engineering Database Projects"
+        audience: internal_only
+        internal_summary: "Setup database projects for engineering team."
+        tags: [engineering, compliance]
+
+  - release: "26.6"
+    ship_date: "2026-06-30"
+    sprint_window: "06/16–06/26"
+    status: next
+    quarter: "Q2 2026"
+    features:
+      - internal_title: "PERSTAT Pay Locking - complete"
+        audience: both
+        external_title: "PERSTAT Pay Locking"
+        internal_summary: "Payroll status locks after close. No unauthorized changes can reach a soldier's pay. Full audit trail on every override."
+        external_summary: "Payroll status locks after close. No unauthorized changes can reach a soldier's pay. Full audit trail on every override."
+        tags: [compliance, operations]
+        multi_sprint: true
+        started_in: { release: "26.5", ship_date: "2026-06-16" }
+      - internal_title: "Engineer Release - Technical Debt"
+        audience: internal_only
+        internal_summary: "Technical Debt"
+        tags: [compliance, technical]
+
+  # ───────────────── Q3 2026 — ARRO Connect (renumbered) ─────────────────
+  # NOTE: this block was originally numbered 26.6–26.11, which collided with
+  # the real 26.6 above (different date, different sprint window, different
+  # features). Shifted +1 to 26.7–26.12 per product decision — dates and
+  # sprint windows below are unchanged from the source document.
+
+  - release: "26.7"
+    ship_date: "2026-07-14"
+    sprint_window: "06/29–07/10"
+    status: upcoming
+    quarter: "Q3 2026"
+    features:
+      - internal_title: "ARRO Connect - Sync Engine Phase 1"
+        audience: both
+        external_title: "ARRO Connect"
+        internal_summary: "Implementation of ARRO Connect - Sync Engine Phase 1 features."
+        external_summary: "Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid."
+        external_tags: [platform, operations]
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.8", ship_date: "2026-07-28" }
+      - internal_title: "ARRO Connect - Intra-State UX Phase 1"
+        audience: internal_only
+        internal_summary: "Creates the UX experience for intra-state Profile Syncs."
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.8", ship_date: "2026-07-28" }
+      - internal_title: "9163 - Enforce Authorization Attributes Across API Endpoints Phase 1"
+        audience: both
+        external_title: "ATO / Compliance"
+        internal_summary: "TBD"
+        external_summary: "Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification."
+        external_tags: [compliance, platform]
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.7", ship_date: "2026-07-14" }
+      - internal_title: "HOLD: Patches"
+        audience: both
+        external_title: "Bugs & Patches"
+        internal_summary: "TBD"
+        external_summary: "Ongoing platform stability improvements and issue resolution across the sprint cycle."
+        external_tags: [platform]
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.7", ship_date: "2026-07-14" }
+
+  - release: "26.8"
+    ship_date: "2026-07-28"
+    sprint_window: "07/13–07/24"
+    status: upcoming
+    quarter: "Q3 2026"
+    features:
+      - internal_title: "ARRO Connect - Sync Engine Complete"
+        audience: both
+        external_title: "ARRO Connect"
+        internal_summary: "Implementation of ARRO Connect - Sync Engine Complete features."
+        external_summary: "Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid."
+        external_tags: [platform, operations]
+        tags: [platform]
+        multi_sprint: true
+        started_in: { release: "26.7", ship_date: "2026-07-14" }
+      - internal_title: "ARRO Connect - Intra-State UX Complete"
+        audience: internal_only
+        internal_summary: "Creates the UX experience for intra-state Profile Syncs."
+        tags: [platform]
+        multi_sprint: true
+        started_in: { release: "26.7", ship_date: "2026-07-14" }
+      - internal_title: "9163 - Enforce Authorization Attributes Across API Endpoints Phase 2"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.9", ship_date: "2026-08-11" }
+      - internal_title: "HOLD: Patches"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.8", ship_date: "2026-07-28" }
+
+  - release: "26.9"
+    ship_date: "2026-08-11"
+    sprint_window: "07/27–08/07"
+    status: upcoming
+    quarter: "Q3 2026"
+    features:
+      - internal_title: "ARRO Connect - Infrastructure & Operation Setup"
+        audience: both
+        external_title: "ARRO Connect"
+        internal_summary: "ARRO Connect Infrastructure and Operation Setup."
+        external_summary: "Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid."
+        external_tags: [platform, operations]
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.9", ship_date: "2026-08-11" }
+      - internal_title: "9163 - Enforce Authorization Attributes Across API Endpoints Complete"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        started_in: { release: "26.8", ship_date: "2026-07-28" }
+      - internal_title: "8324 - Implement the Storing and Deploying of Database deployments to Satisfy FedRAMP Requirements Phase 1"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.10", ship_date: "2026-08-25" }
+      - internal_title: "HOLD: Patches"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.9", ship_date: "2026-08-11" }
+
+  - release: "26.10"
+    ship_date: "2026-08-25"
+    sprint_window: "08/10–08/21"
+    status: upcoming
+    quarter: "Q3 2026"
+    features:
+      - internal_title: "ARRO Connect - Unit Connection & Request Flow Phase 1"
+        audience: both
+        external_title: "ARRO Connect"
+        internal_summary: "Unit Sync and Request Flow."
+        external_summary: "Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid."
+        external_tags: [platform, operations]
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.11", ship_date: "2026-09-08" }
+      - internal_title: "8324 - Implement the Storing and Deploying of Database deployments to Satisfy FedRAMP Requirements Phase 1"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        started_in: { release: "26.9", ship_date: "2026-08-11" }
+      - internal_title: "8790 - Harden ARRO User Account Binding and Lifecycle Control (AC-2 Compliance)"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+      - internal_title: "HOLD: Patches"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.10", ship_date: "2026-08-25" }
+
+  - release: "26.11"
+    ship_date: "2026-09-08"
+    sprint_window: "08/21–09/04"
+    status: upcoming
+    quarter: "Q3 2026"
+    features:
+      - internal_title: "ARRO Connect - Unit Connection & Request Flow Complete"
+        audience: both
+        external_title: "ARRO Connect"
+        internal_summary: "Implementation of ARRO Connect - Unit Connection & Request Flow Complete features."
+        external_summary: "Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid."
+        external_tags: [platform, operations]
+        tags: [platform]
+        multi_sprint: true
+        started_in: { release: "26.10", ship_date: "2026-08-25" }
+      - internal_title: "ARRO Connect - PerStat Visibility & Sync"
+        audience: both
+        external_title: "ARRO Connect"
+        internal_summary: "PerStat Sync and Visibility."
+        external_summary: "Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid."
+        external_tags: [platform, operations]
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.11", ship_date: "2026-09-08" }
+      - internal_title: "8790 - Harden ARRO User Account Binding and Lifecycle Control (AC-2 Compliance)"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+      - internal_title: "HOLD: Patches"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.11", ship_date: "2026-09-08" }
+
+  - release: "26.12"
+    ship_date: "2026-09-22"
+    sprint_window: "09/07–09/18"
+    status: upcoming
+    quarter: "Q3 2026"
+    features:
+      - internal_title: "ARRO Connect - Close Out Process"
+        audience: both
+        external_title: "ARRO Connect"
+        internal_summary: "Implementation of ARRO Connect - Close Out Process features."
+        external_summary: "Federated, read-only personnel and PerStat visibility across state boundaries. Host states see all participating unit data in real time — no manual data sharing, no cross-state coordination overhead. Built for multi-state operations and mutual aid."
+        external_tags: [platform, operations]
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.12", ship_date: "2026-09-22" }
+      - internal_title: "ATO - Technical Debt"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+      - internal_title: "HOLD: Patches"
+        audience: internal_only
+        internal_summary: "TBD"
+        tags: [platform]
+        multi_sprint: true
+        continues_to: { release: "26.12", ship_date: "2026-09-22" }
+
+# ============================================================================
+# HORIZON — undated, quarter-level only (no release/sprint breakdown yet).
+# Internal and external text is identical today; kept as two fields anyway
+# so they can diverge later without restructuring.
+# ============================================================================
+horizon:
+
+  - quarter: "Q4 2026"
+    subtitle: "Horizon planning — details to be confirmed"
+    items:
+      - title: "Import Engine"
+        audience: both
+        internal_summary: "A new flexible data import capability replacing the legacy system. Configurable field mapping and validation handles complex data structures out of the box — reducing onboarding friction for new states and eliminating manual effort during client setup."
+        external_summary: "A new flexible data import capability replacing the legacy system. Configurable field mapping and validation handles complex data structures out of the box — reducing onboarding friction for new states and eliminating manual effort during client setup."
+        external_tags: [platform]
+      - title: "ARRO Platform Integration"
+        audience: both
+        internal_summary: "Connecting core platform capabilities into unified workflows — two focused integrations this quarter."
+        external_summary: "Connecting core platform capabilities into unified workflows — two focused integrations this quarter."
+        external_tags: [platform, em]
+      - title: "ARRO AI Natural Language Processing - Phase 1"
+        audience: both
+        internal_summary: "Leveraging AI to provide natural language understanding and processing capabilities, enabling more intuitive interactions."
+        external_summary: "Leveraging AI to provide natural language understanding and processing capabilities, enabling more intuitive interactions."
+        external_tags: [platform]
+      - title: "ATO / Compliance"
+        audience: both
+        internal_summary: "Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification."
+        external_summary: "Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification."
+        external_tags: [compliance, platform]
+      - title: "Bugs & Patches"
+        audience: both
+        internal_summary: "Ongoing platform stability improvements and issue resolution across the sprint cycle."
+        external_summary: "Ongoing platform stability improvements and issue resolution across the sprint cycle."
+        external_tags: [platform]
+
+  - quarter: "Q1 2027"
+    subtitle: "Horizon planning — details to be confirmed"
+    items:
+      - title: "Consumable Inventory"
+        audience: both
+        internal_summary: "Track and manage non-serialized consumable items alongside the equipment module — bulk supplies, expendables, and stock items managed within the same ARRO inventory workflow."
+        external_summary: "Track and manage non-serialized consumable items alongside the equipment module — bulk supplies, expendables, and stock items managed within the same ARRO inventory workflow."
+        external_tags: [logistics]
+      - title: "Equipment Request & Fulfillment"
+        audience: both
+        internal_summary: "End-to-end equipment lifecycle management. Requests for equipment are submitted, commanders approve, and fulfillment flows through ARRO inventory. Hand receipts generated on check-out; condition inspection recorded on return."
+        external_summary: "End-to-end equipment lifecycle management. Requests for equipment are submitted, commanders approve, and fulfillment flows through ARRO inventory. Hand receipts generated on check-out; condition inspection recorded on return."
+        external_tags: [logistics]
+      - title: "ATO / Compliance"
+        audience: both
+        internal_summary: "Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification."
+        external_summary: "Authority to Operate readiness — security posture, documentation, and controls required for federal compliance certification."
+        external_tags: [compliance, platform]
+      - title: "Bugs & Patches"
+        audience: both
+        internal_summary: "Ongoing platform stability improvements and issue resolution across the sprint cycle."
+        external_summary: "Ongoing platform stability improvements and issue resolution across the sprint cycle."
+        external_tags: [platform]
+
+  - quarter: "Q2 2027"
+    subtitle: "Horizon planning — details to be confirmed"
+    items:
+      - title: "Credential Management"
+        audience: both
+        internal_summary: "Track ICS certifications, FEMA credentials, and other personnel qualifications directly in ARRO. Expiration dates, completion status, and qualification gaps visible at the roster level — so the right people are assigned to the right activations."
+        external_summary: "Track ICS certifications, FEMA credentials, and other personnel qualifications directly in ARRO. Expiration dates, completion status, and qualification gaps visible at the roster level — so the right people are assigned to the right activations."
+        external_tags: [em]
+      # "ARRO Connect Phase 2" intentionally omitted.
+      # The source document listed it here with the exact same description
+      # text as the Q3 2026 "ARRO Connect" card (word-for-word copy-paste) —
+      # there is no internal release, feature, or story behind it. Per the
+      # rule at the top of this file, a feature can't appear externally
+      # without internal backing, so this stays out until it's actually
+      # scoped. Add it back here, with its own release entry above, once
+      # there's real Q2 2027 work defined.
+      - title: "ARRO AI Natural Language Processing - Phase 2"
+        audience: both
+        internal_summary: "Expanding AI capabilities to handle more complex queries and provide deeper insights, further enhancing user experience and operational efficiency."
+        external_summary: "Expanding AI capabilities to handle more complex queries and provide deeper insights, further enhancing user experience and operational efficiency."
+        external_tags: [platform]
+      - title: "Bugs & Patches"
+        audience: both
+        internal_summary: "Ongoing platform stability improvements and issue resolution across the sprint cycle."
+        external_summary: "Ongoing platform stability improvements and issue resolution across the sprint cycle."
+        external_tags: [platform]
