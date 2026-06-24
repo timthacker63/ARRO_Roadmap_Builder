@@ -174,7 +174,7 @@ releases:
     status: upcoming
     quarter: "Q3 2026"
     features:
-      - internal_title: "ARRO Connect - Sync Engine Phase 1"
+      - internal_title: "ARRO Connect - Sync Engine Phase 1 - Intra-State Profile Syncs"
         audience: both
         external_title: "ARRO Connect"
         internal_summary: "Implementation of ARRO Connect - Sync Engine Phase 1 features."
@@ -183,7 +183,7 @@ releases:
         tags: [platform]
         multi_sprint: true
         continues_to: { release: "26.8", ship_date: "2026-07-28" }
-      - internal_title: "ARRO Connect - Intra-State UX Phase 1"
+      - internal_title: "ARRO Connect - Intra-State UX Phase 1 - Intra-State Profile Syncs"
         audience: internal_only
         internal_summary: "Creates the UX experience for intra-state Profile Syncs."
         tags: [platform]
@@ -214,7 +214,7 @@ releases:
     status: upcoming
     quarter: "Q3 2026"
     features:
-      - internal_title: "ARRO Connect - Sync Engine Complete"
+      - internal_title: "ARRO Connect - Sync Engine Complete - Intra-State Profile Syncs"
         audience: both
         external_title: "ARRO Connect"
         internal_summary: "Implementation of ARRO Connect - Sync Engine Complete features."
@@ -223,7 +223,7 @@ releases:
         tags: [platform]
         multi_sprint: true
         started_in: { release: "26.7", ship_date: "2026-07-14" }
-      - internal_title: "ARRO Connect - Intra-State UX Complete"
+      - internal_title: "ARRO Connect - Intra-State UX Complete - Intra-State Profile Syncs"
         audience: internal_only
         internal_summary: "Creates the UX experience for intra-state Profile Syncs."
         tags: [platform]

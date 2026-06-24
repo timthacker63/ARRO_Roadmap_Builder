@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-INTERNAL_HTML_PATH = BASE_DIR / "ARRO_roadmap.html"
+INTERNAL_HTML_PATH = BASE_DIR / "ARRO_Roadmap_Internal.html"
 EXTERNAL_HTML_PATH = BASE_DIR / "ARRO_Roadmap_External.html"
 
 with open(BASE_DIR / "roadmap_data.yaml") as f:
